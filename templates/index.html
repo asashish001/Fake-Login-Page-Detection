@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoginLens AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Logo  -->
+    <div id="header">
+        <img src="{{ url_for('static', filename='icon/Lens.png') }}" alt="Logo" id="logo-icon">
+        <span id="logo-text">LoginLens AI</span>
+    </div>
+
+    <div id="overlay" style="display: none;">
+        <div class="spinner-container">
+            <div id="spinner"></div>
+            <p>Reloading model, this may take some time...</p>
+        </div>
+    </div>
+
+
+    <!-- 页面居中内容 -->
+    <div id="main-container">
+        <div id="input-container">
+            <div class="inner-container">
+                <!-- 图片接收区域 -->
+                <div id="image-upload-container">
+                    <div id="image-drop-area" class="drop-area" v-if="!uploadSuccess">
+                        <img src="{{ url_for('static', filename='icon/file1.png') }}" alt="Upload Icon"
+                            class="upload-icon" />
+                        <p></p>
+                        <label for="image-upload" class="upload-label">+ Upload Image</label>
+                        <p style="font-size: 14px;">Or ctrl+v here</p>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;"
+                            @change="handleImageUpload" />
+                    </div>
+                    <div id="upload-success-area" class="upload-success-area" v-if="uploadSuccess">
+                        <div class="success-message">
+                            <img src="{{ url_for('static', filename='icon/succ.png') }}" alt="Success Icon"
+                                class="success-icon" />
+                            <span class="success-text">Uploaded Successfully!</span>
+                        </div>
+                        <img :src="imageUrl" alt="Uploaded Image" class="uploaded-thumbnail" />
+                        <button class="clear-button" @click="clearUpload">clear</button>
+                    </div>
+                </div>
+                <!-- 新增的开始检测按钮 -->
+                <button id="start-detection-button" @click="startDetection">Start Detection !</button>
+            </div>
+        </div>
+        <div id="output-container">
+            <div id="result-container" style="justify-content: center;">
+                <div id="detection-result-container" style="width: 600px;">
+                    <span class="result_title">Detection Result</span>
+                    <div id="detection-result">
+                        <div>
+                            <span class="icon">📊</span>
+                            <span class="task" style="font-weight: bold;">Result</span>
+                            <div id="detection-label"></div>
+                        </div>
+                        <div class="separator"></div>
+                        <div>
+                            <ul class="tasks-list">
+                                <li>
+                                    <div id="detection-explanation"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
