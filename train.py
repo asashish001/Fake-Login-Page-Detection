@@ -68,7 +68,7 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Training Loop
-    epochs = 2
+    epochs = 10
     best_val_loss = float('inf')
     patience = 5
     patience_counter = 0

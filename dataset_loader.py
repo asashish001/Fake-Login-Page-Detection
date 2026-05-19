@@ -1,7 +1,21 @@
 import os
 import torch
+from PIL import Image
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
+
+def is_valid_image(path):
+    """Checks if a file is a valid image and can be opened by PIL."""
+    valid_extensions = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
+    if not path.lower().endswith(valid_extensions):
+        return False
+    try:
+        with Image.open(path) as img:
+            img.verify()
+        return True
+    except Exception:
+        print(f"Warning: Skipping corrupted or unidentified image: {path}")
+        return False
 
 def load_dataset(dataset_dir, batch_size=32, img_size=(224, 224), validation_split=0.2, seed=42):
     """
@@ -19,7 +33,7 @@ def load_dataset(dataset_dir, batch_size=32, img_size=(224, 224), validation_spl
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-    full_dataset = datasets.ImageFolder(root=dataset_dir, transform=transform)
+    full_dataset = datasets.ImageFolder(root=dataset_dir, transform=transform, is_valid_file=is_valid_image)
     class_names = full_dataset.classes
     print(f"Classes: {class_names}")
 
@@ -31,9 +45,12 @@ def load_dataset(dataset_dir, batch_size=32, img_size=(224, 224), validation_spl
     generator = torch.Generator().manual_seed(seed)
     train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size], generator=generator)
 
+    # Enable pin_memory only if CUDA is available to avoid UserWarnings on CPU
+    use_pin_memory = torch.cuda.is_available()
+
     # Create DataLoaders
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0, pin_memory=True)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, pin_memory=use_pin_memory)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0, pin_memory=use_pin_memory)
 
     return train_loader, val_loader, class_names
 
