@@ -1,20 +1,23 @@
 # Visual Phishing Detector - Deep Learning & Computer Vision
 
-This project leverages **Deep Learning** and **Computer Vision** to detect phishing websites by visually analyzing screenshots of their login pages. Modern phishing attacks often perfectly replicate the visual styling of legitimate sites to bypass traditional URL-based detectors. This solution uses a **ResNet50** Convolutional Neural Network (CNN) built with **PyTorch** and **Transfer Learning** to classify pages based on their visual "DNA".
+This project leverages **Deep Learning**, **Computer Vision**, and **Optical Character Recognition (OCR)** to detect phishing websites by analyzing screenshots of their login pages. Modern phishing attacks often perfectly replicate the visual styling of legitimate sites to bypass traditional detectors. This solution uses a hybrid approach: a **ResNet50** Convolutional Neural Network (CNN) built with **PyTorch** to analyze global visual "DNA", combined with an **EasyOCR-powered engine** that extracts the URL from the browser's address bar to detect unauthorized brand domain usage (e.g., a Facebook lookalike page hosted on a foreign domain).
 
 ## ✨ Key Features
 
-- **ResNet50 Backbone**: Utilizes the powerful ResNet50 architecture (pre-trained on ImageNet) for robust feature extraction.
+- **Hybrid Visual-OCR Engine**: Combines ResNet50 visual pattern matching with OCR text scanning.
+- **Automated Address Bar Extraction**: Crops the top 12% of screenshots to locate the browser address bar, extracts the URL, and parses the root domain.
+- **Brand Domain Spoofing Verification**: Cross-references recognized brands (Facebook, Google, PayPal, Netflix, Microsoft, etc.) with official legitimate domain suffix lists, overriding predictions if a mismatch is found.
+- **ResNet50 Backbone**: Utilizes the powerful ResNet50 architecture (pre-trained on ImageNet) for robust spatial visual feature extraction.
 - **PyTorch Migration**: Fully implemented in PyTorch for high performance and flexible model training.
 - **Aggressive False Negative Penalization**: Implements custom class weights with a **2.0x penalty factor** for phishing samples to ensure high recall in security contexts.
-- **Modern Dashboard**: A premium, dark-mode glassmorphic UI built with Tailwind CSS for real-time interaction and prediction.
+- **Modern Dashboard**: A premium, dark-mode glassmorphic UI built with Tailwind CSS for real-time interaction and prediction, now featuring live brand discrepancy reasoning.
 - **Flask REST API**: Model predictions are served via an asynchronous Flask backend.
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python, PyTorch, Torchvision, Flask
-- **Frontend**: HTML5, Vanilla JavaScript, Tailwind CSS (Glassmorphism)
-- **Data Science**: Scikit-learn, Numpy, Matplotlib, Seaborn, PIL
+- **Backend**: Python, PyTorch, Torchvision, Flask, EasyOCR
+- **Frontend**: HTML5, Vanilla JavaScript, Tailwind CSS (Glassmorphism), Vue.js
+- **Data Science**: Scikit-learn, Numpy, Matplotlib, Seaborn, PIL, OpenCV
 
 ## 📂 Project Structure
 

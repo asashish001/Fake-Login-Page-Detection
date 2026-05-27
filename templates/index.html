@@ -22,12 +22,9 @@
         </div>
     </div>
 
-
-    <!-- 页面居中内容 -->
     <div id="main-container">
         <div id="input-container">
             <div class="inner-container">
-                <!-- 图片接收区域 -->
                 <div id="image-upload-container">
                     <div id="image-drop-area" class="drop-area" v-if="!uploadSuccess">
                         <img src="{{ url_for('static', filename='icon/file1.png') }}" alt="Upload Icon"
@@ -39,16 +36,22 @@
                             @change="handleImageUpload" />
                     </div>
                     <div id="upload-success-area" class="upload-success-area" v-if="uploadSuccess">
-                        <div class="success-message">
+                        <div class="success-message" v-if="!isPredicting">
                             <img src="{{ url_for('static', filename='icon/succ.png') }}" alt="Success Icon"
                                 class="success-icon" />
                             <span class="success-text">Uploaded Successfully!</span>
                         </div>
-                        <img :src="imageUrl" alt="Uploaded Image" class="uploaded-thumbnail" />
-                        <button class="clear-button" @click="clearUpload">clear</button>
+                        <div class="image-wrapper" style="position: relative; display: inline-block;">
+                            <img :src="imageUrl" alt="Uploaded Image" class="uploaded-thumbnail" :class="{ 'blur-processing': isPredicting }" />
+                            <!-- Buffer loading animation overlay -->
+                            <div class="image-processing-overlay" v-if="isPredicting">
+                                <div class="buffer-spinner"></div>
+                                <p class="buffer-text">Scanning Image...</p>
+                            </div>
+                        </div>
+                        <button class="clear-button" @click="clearUpload" :disabled="isPredicting">clear</button>
                     </div>
                 </div>
-                <!-- 新增的开始检测按钮 -->
                 <button id="start-detection-button" @click="startDetection">Start Detection !</button>
             </div>
         </div>
